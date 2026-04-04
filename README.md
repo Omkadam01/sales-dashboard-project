@@ -1,4 +1,4 @@
-# 📊 Project 1 — Business Sales Intelligence Dashboard
+# 📊 Project 1 - Business Sales Intelligence Dashboard
 
 > End-to-end sales analytics for a 5,000-transaction, multi-region electronics business.
 > Built to demonstrate: **SQL + Python EDA + Excel dashboarding + live web dashboard**.
