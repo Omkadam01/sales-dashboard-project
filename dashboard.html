@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Intelligence Dashboard | Project 1</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f9fc; --surface: #ffffff; --surface2: #f1f4f9; --surface3: #e8ecf4;
+    --ink: #0d1117; --ink2: #3d4452; --ink3: #7a8194; --ink4: #b0b7c3;
+    --blue: #1a56db; --green: #0e9f6e; --amber: #e3a008; --red: #e02424; --purple: #7c3aed;
+    --border: rgba(0,0,0,0.07); --radius: 12px;
+  }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 220px;
+    background: var(--ink); padding: 2rem 1.25rem; z-index: 100;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .logo { font-size: 13px; font-weight: 800; color: white; letter-spacing: .08em; margin-bottom: 2rem; }
+  .logo span { color: #4a8eff; }
+  .nav-label { font-size: 9px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; margin: 1.25rem 0 .5rem; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: .6rem .85rem;
+    border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.6);
+    cursor: pointer; transition: all .15s; text-decoration: none; margin-bottom: 2px;
+  }
+  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item .icon { font-size: 14px; width: 18px; text-align: center; }
+  .main { margin-left: 220px; padding: 2rem; min-height: 100vh; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; }
+  .page-title { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+  .page-sub { font-size: 12px; color: var(--ink3); font-family: 'DM Mono', monospace; margin-top: .2rem; }
+  .filter-bar { display: flex; gap: 8px; align-items: center; }
+  .filter-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+    padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--ink3); cursor: pointer; transition: all .15s;
+  }
+  .filter-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 1.75rem; }
+  .kpi {
+    background: var(--surface); border-radius: var(--radius); padding: 1.1rem 1.2rem;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+  }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--kc); }
+  .kpi-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink3); font-family: 'DM Mono', monospace; margin-bottom: .45rem; }
+  .kpi-val { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1; }
+  .kpi-sub { font-size: 10.5px; color: var(--ink3); font-family: 'DM Mono', monospace; margin-top: .3rem; }
+  .kpi-delta { font-size: 10.5px; font-family: 'DM Mono', monospace; margin-top: .3rem; }
+  .up { color: var(--green); } .dn { color: var(--red); }
+  .grid-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  .card {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 1.25rem; border: 1px solid var(--border);
+  }
+  .card-title { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink3); font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
+  .chart-wrap { position: relative; width: 100%; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 10px; text-align: left; color: var(--ink3); font-family: 'DM Mono', monospace;
+    letter-spacing: .08em; text-transform: uppercase; padding: .5rem .75rem;
+    border-bottom: 1px solid var(--border); }
+  td { font-size: 12px; padding: .55rem .75rem; border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace; color: var(--ink2); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 700; }
+  .badge-up { background: rgba(14,159,110,.12); color: #065f46; }
+  .badge-dn { background: rgba(224,36,36,.1); color: #991b1b; }
+  .insight { background: linear-gradient(135deg,rgba(26,86,219,.06),rgba(14,159,110,.04));
+    border: 1px solid rgba(26,86,219,.18); border-radius: var(--radius);
+    padding: 1rem 1.25rem; display: flex; gap: 12px; margin-bottom: 1.5rem; align-items: flex-start; }
+  .insight-body { font-size: 13px; line-height: 1.65; color: var(--ink2); }
+  .insight-body strong { color: var(--ink); }
+  .legend { display: flex; gap: 16px; margin-bottom: .75rem; flex-wrap: wrap; }
+  .li { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+  .ls { width: 10px; height: 10px; border-radius: 2px; }
+  .footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--ink4); font-family: 'DM Mono', monospace; text-align: center; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">SALES<span>IQ</span></div>
+  <span class="nav-label">Analytics</span>
+  <a class="nav-item active" href="#"><span class="icon">📊</span> Overview</a>
+  <a class="nav-item" href="#region-section"><span class="icon">🗺</span> Regions</a>
+  <a class="nav-item" href="#product-section"><span class="icon">📦</span> Products</a>
+  <a class="nav-item" href="#trend-section"><span class="icon">📈</span> Trends</a>
+  <span class="nav-label">Data</span>
+  <a class="nav-item" href="./sales_data.csv"><span class="icon">⬇</span> Raw Data</a>
+  <a class="nav-item" href="./Project1_Sales_Dashboard.xlsx"><span class="icon">📋</span> Excel File</a>
+</nav>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Business Sales Dashboard</div>
+      <div class="page-sub">5,000 transactions · FY 2022–2023 · 5 regions · 8 products</div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setYear('all',this)">All Years</button>
+      <button class="filter-btn" onclick="setYear('2022',this)">2022</button>
+      <button class="filter-btn" onclick="setYear('2023',this)">2023</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi" style="--kc:var(--blue)">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-val" id="kRevenue">₹134.4 Cr</div>
+      <div class="kpi-delta up" id="kRevDelta">↑ +12.3% YoY</div>
+    </div>
+    <div class="kpi" style="--kc:var(--green)">
+      <div class="kpi-label">Net Profit</div>
+      <div class="kpi-val" id="kProfit">₹53.4 Cr</div>
+      <div class="kpi-sub" id="kMargin">Margin: 39.7%</div>
+    </div>
+    <div class="kpi" style="--kc:var(--amber)">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-val" id="kOrders">5,000</div>
+      <div class="kpi-sub">Across all regions</div>
+    </div>
+    <div class="kpi" style="--kc:var(--purple)">
+      <div class="kpi-label">Avg Order Value</div>
+      <div class="kpi-val" id="kAOV">₹2.69L</div>
+      <div class="kpi-sub">Per transaction</div>
+    </div>
+    <div class="kpi" style="--kc:var(--blue)">
+      <div class="kpi-label">Top Region</div>
+      <div class="kpi-val">East</div>
+      <div class="kpi-sub">40.2% margin</div>
+    </div>
+    <div class="kpi" style="--kc:var(--red)">
+      <div class="kpi-label">Top Product</div>
+      <div class="kpi-val">Laptop</div>
+      <div class="kpi-sub">₹38.4 Cr revenue</div>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight">
+    <span style="font-size:18px">💡</span>
+    <div class="insight-body">
+      <strong>Key Insight:</strong> Q4 seasonality drives a <strong>+15% revenue spike</strong> in Electronics.
+      East region leads profitability at <strong>40.2% margin</strong>. Headphones has the highest margin (47.6%) despite lower volume —
+      recommend targeted upsell campaigns to existing Laptop/Smartphone buyers.
+    </div>
+  </div>
+
+  <!-- Charts Row 1 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" id="trend-section">Quarterly Revenue vs Profit</div>
+      <div class="legend">
+        <span class="li"><span class="ls" style="background:var(--blue)"></span>Revenue</span>
+        <span class="li"><span class="ls" style="background:var(--green)"></span>Profit</span>
+      </div>
+      <div class="chart-wrap" style="height:240px"><canvas id="qChart"></canvas></div>
+    </div>
+    <div class="card" id="region-section">
+      <div class="card-title">Revenue by Region</div>
+      <div class="chart-wrap" style="height:260px"><canvas id="rChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts Row 2 -->
+  <div class="grid-3">
+    <div class="card" style="grid-column:span 2" id="product-section">
+      <div class="card-title">Monthly Revenue Trend</div>
+      <div class="legend">
+        <span class="li"><span class="ls" style="background:var(--blue)"></span>Revenue (₹ Cr)</span>
+        <span class="li"><span class="ls" style="background:var(--green)"></span>Profit (₹ Cr)</span>
+      </div>
+      <div class="chart-wrap" style="height:200px"><canvas id="mChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Split by Category</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="catChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Product Table -->
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="card-title">Product Performance Leaderboard</div>
+    <table>
+      <thead>
+        <tr><th>Product</th><th>Category</th><th>Revenue</th><th>Profit</th><th>Margin</th><th>Rev Share</th><th>YoY</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:700;color:var(--ink)">Laptop</td><td>Electronics</td><td>₹38.4 Cr</td><td>₹14.2 Cr</td><td>37.0%</td><td>28.6%</td><td><span class="badge badge-up">+14.2%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Smartphone</td><td>Electronics</td><td>₹31.2 Cr</td><td>₹13.1 Cr</td><td>42.0%</td><td>23.2%</td><td><span class="badge badge-up">+11.8%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Tablet</td><td>Electronics</td><td>₹20.1 Cr</td><td>₹8.0 Cr</td><td>39.8%</td><td>15.0%</td><td><span class="badge badge-up">+8.4%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Monitor</td><td>Peripherals</td><td>₹16.8 Cr</td><td>₹5.9 Cr</td><td>35.1%</td><td>12.5%</td><td><span class="badge badge-up">+6.2%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Headphones</td><td>Audio</td><td>₹12.4 Cr</td><td>₹5.9 Cr</td><td>47.6%</td><td>9.2%</td><td><span class="badge badge-up">+18.1%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Webcam</td><td>Peripherals</td><td>₹7.9 Cr</td><td>₹3.4 Cr</td><td>43.0%</td><td>5.9%</td><td><span class="badge badge-dn">-3.2%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Keyboard</td><td>Peripherals</td><td>₹4.8 Cr</td><td>₹2.6 Cr</td><td>54.2%</td><td>3.6%</td><td><span class="badge badge-up">+2.1%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Mouse</td><td>Peripherals</td><td>₹2.8 Cr</td><td>₹1.5 Cr</td><td>53.6%</td><td>2.1%</td><td><span class="badge badge-up">+1.4%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Project 1 · Business Sales Intelligence Dashboard · Built with Python, SQL & Chart.js ·
+    Data: 5,000 synthetic transactions FY2022–2023
+  </div>
+</main>
+
+<script>
+const DATA = {
+  quarterly: {
+    all: { labels:['2022 Q1','Q2','Q3','Q4','2023 Q1','Q2','Q3','Q4'], rev:[14.2,16.8,14.1,18.9,15.7,17.4,15.2,22.1], prf:[5.6,6.7,5.5,7.6,6.2,6.9,5.9,8.9] },
+    '2022': { labels:['Q1','Q2','Q3','Q4'], rev:[14.2,16.8,14.1,18.9], prf:[5.6,6.7,5.5,7.6] },
+    '2023': { labels:['Q1','Q2','Q3','Q4'], rev:[15.7,17.4,15.2,22.1], prf:[6.2,6.9,5.9,8.9] }
+  },
+  region: {
+    all: { labels:['East','West','North','Central','South'], vals:[28.4,27.6,26.9,26.1,25.4] },
+    '2022': { labels:['East','West','North','Central','South'], vals:[13.6,13.1,12.8,12.4,12.0] },
+    '2023': { labels:['East','West','North','Central','South'], vals:[14.8,14.5,14.1,13.7,13.4] }
+  },
+  monthly: {
+    all: { labels:['Jan22','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan23','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec23'],
+      rev:[4.5,4.2,5.5,5.1,5.8,5.9,4.7,4.6,3.9,6.2,6.5,7.2,4.9,4.7,6.1,5.6,6.2,5.6,5.1,5.0,4.1,7.0,7.2,8.9],
+      prf:[1.8,1.6,2.2,2.0,2.3,2.4,1.8,1.8,1.5,2.5,2.6,2.9,1.9,1.8,2.4,2.2,2.4,2.2,2.0,1.9,1.6,2.8,2.9,3.6] },
+    '2022': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.5,4.2,5.5,5.1,5.8,5.9,4.7,4.6,3.9,6.2,6.5,7.2], prf:[1.8,1.6,2.2,2.0,2.3,2.4,1.8,1.8,1.5,2.5,2.6,2.9] },
+    '2023': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.9,4.7,6.1,5.6,6.2,5.6,5.1,5.0,4.1,7.0,7.2,8.9], prf:[1.9,1.8,2.4,2.2,2.4,2.2,2.0,1.9,1.6,2.8,2.9,3.6] }
+  },
+  kpis: {
+    all: { rev:'₹134.4 Cr', prf:'₹53.4 Cr', margin:'39.7%', orders:'5,000', aov:'₹2.69L', delta:'↑ +12.3% YoY' },
+    '2022': { rev:'₹63.0 Cr', prf:'₹24.8 Cr', margin:'39.4%', orders:'2,420', aov:'₹2.60L', delta:'Baseline year' },
+    '2023': { rev:'₹71.4 Cr', prf:'₹28.6 Cr', margin:'40.1%', orders:'2,580', aov:'₹2.77L', delta:'↑ +13.3% vs 2022' }
+  }
+};
+
+const gOpts = (extraX={}, extraY={}) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{ display:false } },
+  scales:{
+    x:{ ticks:{ color:'#7a8194', font:{ size:10 } }, grid:{ color:'rgba(0,0,0,0.05)' }, ...extraX },
+    y:{ ticks:{ color:'#7a8194', font:{ size:10 } }, grid:{ color:'rgba(0,0,0,0.05)' }, ...extraY }
+  }
+});
+
+let qC, rC, mC, catC;
+
+function initCharts(y='all') {
+  const q=DATA.quarterly[y], r=DATA.region[y], m=DATA.monthly[y];
+  if(qC) qC.destroy();
+  qC = new Chart(document.getElementById('qChart'),{ type:'bar',
+    data:{ labels:q.labels, datasets:[
+      { label:'Revenue', data:q.rev, backgroundColor:'#1a56db', borderRadius:5, barPercentage:.4 },
+      { label:'Profit', data:q.prf, backgroundColor:'#0e9f6e', borderRadius:5, barPercentage:.4 }
+    ]},
+    options:{ ...gOpts({ ticks:{ color:'#7a8194', font:{size:10}, maxRotation:40 } },
+      { ticks:{ color:'#7a8194', callback:v=>'₹'+v+'Cr' } }), responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} } }
+  });
+  if(rC) rC.destroy();
+  rC = new Chart(document.getElementById('rChart'),{ type:'bar',
+    data:{ labels:r.labels, datasets:[{ label:'Revenue', data:r.vals,
+      backgroundColor:['#1a56db','#0e9f6e','#e3a008','#7c3aed','#e02424'], borderRadius:5, barPercentage:.65 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ ticks:{ color:'#7a8194', callback:v=>'₹'+v+'Cr' }, grid:{ color:'rgba(0,0,0,0.05)' } },
+               y:{ ticks:{ color:'#7a8194', font:{size:11} }, grid:{ display:false } } } }
+  });
+  if(mC) mC.destroy();
+  mC = new Chart(document.getElementById('mChart'),{ type:'line',
+    data:{ labels:m.labels, datasets:[
+      { label:'Revenue', data:m.rev, borderColor:'#1a56db', backgroundColor:'rgba(26,86,219,0.08)', fill:true, tension:.4, pointRadius:2, borderWidth:2 },
+      { label:'Profit', data:m.prf, borderColor:'#0e9f6e', backgroundColor:'rgba(14,159,110,0.08)', fill:true, tension:.4, pointRadius:2, borderWidth:2 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ ticks:{ color:'#7a8194', font:{size:9}, maxRotation:40, autoSkip:true, maxTicksLimit:12 }, grid:{ color:'rgba(0,0,0,0.05)' } },
+               y:{ ticks:{ color:'#7a8194', callback:v=>'₹'+v }, grid:{ color:'rgba(0,0,0,0.05)' } } } }
+  });
+  if(catC) catC.destroy();
+  catC = new Chart(document.getElementById('catChart'),{ type:'doughnut',
+    data:{ labels:['Electronics','Peripherals','Audio'],
+      datasets:[{ data:[y==='all'?66.8:65, y==='all'?29.6:30.8, y==='all'?3.6:4.2],
+        backgroundColor:['#1a56db','#0e9f6e','#e3a008'], borderWidth:0, hoverOffset:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins:{ legend:{ display:true, position:'bottom', labels:{ font:{size:11}, color:'#7a8194', boxWidth:10, padding:12 } } } }
+  });
+}
+
+function setYear(y, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const k = DATA.kpis[y];
+  document.getElementById('kRevenue').textContent = k.rev;
+  document.getElementById('kProfit').textContent = k.prf;
+  document.getElementById('kMargin').textContent = 'Margin: ' + k.margin;
+  document.getElementById('kOrders').textContent = k.orders;
+  document.getElementById('kAOV').textContent = k.aov;
+  document.getElementById('kRevDelta').textContent = k.delta;
+  initCharts(y);
+}
+
+initCharts('all');
+</script>
+</body>
+</html>
