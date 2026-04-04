@@ -130,4 +130,4 @@ The `sql/sales_queries.sql` file contains 20+ production-grade queries including
 
 ---
 
-*Built by [Your Name] | Data Analyst Portfolio | 2024*
+
