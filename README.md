@@ -9,7 +9,6 @@ End-to-end sales analytics project covering 5,000 transactions across 5 regions 
 | File | Description |
 |------|-------------|
 | `sales_data.csv` | 5,000 raw sales transactions |
-| `sales_dashboard.xlsx` | Formatted Excel dashboard with live KPI formulas |
 | `analysis.py` | Python EDA script — generates 5 charts and prints key metrics |
 | `queries.sql` | 20+ SQL queries covering KPIs, trends, pivots, and window functions |
 | `dashboard.html` | Interactive web dashboard — open in any browser, no server needed |
@@ -23,7 +22,6 @@ End-to-end sales analytics project covering 5,000 transactions across 5 regions 
 |-------|-------|
 | Data and EDA | Python, Pandas, Matplotlib, Seaborn |
 | SQL Analysis | PostgreSQL-compatible SQL — window functions, CTEs, pivots |
-| Excel Dashboard | openpyxl — live formulas, conditional formatting, charts |
 | Web Dashboard | Chart.js, HTML, CSS, JavaScript |
 
 ---
@@ -36,6 +34,17 @@ python analysis.py
 ```
 
 Open `dashboard.html` in a browser to explore the interactive charts.
+
+## Live Demo
+
+[Open the Sales Dashboard](https://omkadam01.github.io/sales-dashboard-project/)
+
+The dashboard is a static GitHub Pages site. It does not require a backend,
+database, environment variables, or build command. For a local preview, run
+`python -m http.server 8000` from the repository root and open
+`http://localhost:8000/`. Chart.js and the two web fonts are loaded from public
+CDNs, so an internet connection is required for charts and custom typography.
+The site does not collect visitor data.
 
 ---
 
@@ -54,15 +63,15 @@ Open `dashboard.html` in a browser to explore the interactive charts.
 
 ## Business Insights
 
-**Q4 Seasonality** — Revenue spikes 15% in Q4 driven by Laptop and Smartphone demand. Pre-stocking 3x inventory by September is recommended.
+**Q4 Seasonality** — Q4 generated Rs. 38.75 Cr across both years, the strongest quarter in the dataset.
 
-**East Region Leads** — East achieves 40.2% profit margin versus 38.9% in South. Reallocating 10% of South marketing budget to East could yield Rs. 1.8 Cr additional profit.
+**North Region Leads Revenue** — North generated Rs. 28.83 Cr, followed by East at Rs. 28.25 Cr.
 
-**Headphones Opportunity** — Highest margin product at 47.6% but only 9.2% revenue share. Targeted upsell to existing Electronics buyers could grow this segment by 25%.
+**Mouse Leads Margin** — Mouse has the highest product margin at 49.9%, while Laptop remains the largest product by revenue at Rs. 53.90 Cr.
 
-**Q3 Consistent Dip** — Q3 is the weakest quarter in both years due to slower corporate procurement in July-August. B2C promotional campaigns in August are recommended.
+**Smartphone Growth** — Smartphone revenue increased 20.3% in 2023 versus 2022.
 
-**Webcam Declining** — Only product with negative YoY growth at -3.2%. Inventory reduction and bundle pricing alongside Laptop sales is advised.
+**Monitor Decline** — Monitor revenue decreased 16.4% in 2023, the largest product-level decline in the dataset.
 
 ---
 
@@ -82,7 +91,7 @@ Open `dashboard.html` in a browser to explore the interactive charts.
 
 ## Description
 
-End-to-end business sales dashboard — Python EDA, 20+ SQL queries, Excel dashboard, interactive HTML visualization.
+End-to-end business sales dashboard — Python EDA, 20+ SQL queries, and interactive HTML visualization.
 
 ---
 

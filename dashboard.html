@@ -84,6 +84,21 @@
   .ls { width: 10px; height: 10px; border-radius: 2px; }
   .footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
     font-size: 11px; color: var(--ink4); font-family: 'DM Mono', monospace; text-align: center; }
+  @media (max-width: 1100px) {
+    .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .sidebar { position: static; width: 100%; padding: 1rem; flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .logo { width: 100%; margin-bottom: .5rem; }
+    .nav-label { display: none; }
+    .nav-item { margin: 0; }
+    .main { margin-left: 0; padding: 1rem; }
+    .topbar { align-items: flex-start; flex-direction: column; gap: 1rem; }
+    .kpi-row, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .grid-3 .card { grid-column: span 1 !important; }
+    .card { overflow-x: auto; }
+    table { min-width: 760px; }
+  }
 </style>
 </head>
 <body>
@@ -97,7 +112,6 @@
   <a class="nav-item" href="#trend-section"><span class="icon">📈</span> Trends</a>
   <span class="nav-label">Data</span>
   <a class="nav-item" href="./sales_data.csv"><span class="icon">⬇</span> Raw Data</a>
-  <a class="nav-item" href="./Project1_Sales_Dashboard.xlsx"><span class="icon">📋</span> Excel File</a>
 </nav>
 
 <main class="main">
@@ -118,7 +132,7 @@
     <div class="kpi" style="--kc:var(--blue)">
       <div class="kpi-label">Total Revenue</div>
       <div class="kpi-val" id="kRevenue">₹134.4 Cr</div>
-      <div class="kpi-delta up" id="kRevDelta">↑ +12.3% YoY</div>
+      <div class="kpi-delta up" id="kRevDelta">↑ +3.3% YoY</div>
     </div>
     <div class="kpi" style="--kc:var(--green)">
       <div class="kpi-label">Net Profit</div>
@@ -137,13 +151,13 @@
     </div>
     <div class="kpi" style="--kc:var(--blue)">
       <div class="kpi-label">Top Region</div>
-      <div class="kpi-val">East</div>
-      <div class="kpi-sub">40.2% margin</div>
+      <div class="kpi-val">North</div>
+      <div class="kpi-sub">₹28.83 Cr revenue</div>
     </div>
     <div class="kpi" style="--kc:var(--red)">
       <div class="kpi-label">Top Product</div>
       <div class="kpi-val">Laptop</div>
-      <div class="kpi-sub">₹38.4 Cr revenue</div>
+      <div class="kpi-sub">₹53.90 Cr revenue</div>
     </div>
   </div>
 
@@ -151,9 +165,9 @@
   <div class="insight">
     <span style="font-size:18px">💡</span>
     <div class="insight-body">
-      <strong>Key Insight:</strong> Q4 seasonality drives a <strong>+15% revenue spike</strong> in Electronics.
-      East region leads profitability at <strong>40.2% margin</strong>. Headphones has the highest margin (47.6%) despite lower volume —
-      recommend targeted upsell campaigns to existing Laptop/Smartphone buyers.
+      <strong>Key Insight:</strong> Q4 produced the most revenue at <strong>₹38.75 Cr</strong> across both years.
+      North leads revenue at <strong>₹28.83 Cr</strong>, while Mouse has the highest product margin (49.9%).
+      Smartphone revenue grew 20.3% in 2023 while Laptop remained the largest product overall.
     </div>
   </div>
 
@@ -197,14 +211,14 @@
         <tr><th>Product</th><th>Category</th><th>Revenue</th><th>Profit</th><th>Margin</th><th>Rev Share</th><th>YoY</th></tr>
       </thead>
       <tbody>
-        <tr><td style="font-weight:700;color:var(--ink)">Laptop</td><td>Electronics</td><td>₹38.4 Cr</td><td>₹14.2 Cr</td><td>37.0%</td><td>28.6%</td><td><span class="badge badge-up">+14.2%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Smartphone</td><td>Electronics</td><td>₹31.2 Cr</td><td>₹13.1 Cr</td><td>42.0%</td><td>23.2%</td><td><span class="badge badge-up">+11.8%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Tablet</td><td>Electronics</td><td>₹20.1 Cr</td><td>₹8.0 Cr</td><td>39.8%</td><td>15.0%</td><td><span class="badge badge-up">+8.4%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Monitor</td><td>Peripherals</td><td>₹16.8 Cr</td><td>₹5.9 Cr</td><td>35.1%</td><td>12.5%</td><td><span class="badge badge-up">+6.2%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Headphones</td><td>Audio</td><td>₹12.4 Cr</td><td>₹5.9 Cr</td><td>47.6%</td><td>9.2%</td><td><span class="badge badge-up">+18.1%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Webcam</td><td>Peripherals</td><td>₹7.9 Cr</td><td>₹3.4 Cr</td><td>43.0%</td><td>5.9%</td><td><span class="badge badge-dn">-3.2%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Keyboard</td><td>Peripherals</td><td>₹4.8 Cr</td><td>₹2.6 Cr</td><td>54.2%</td><td>3.6%</td><td><span class="badge badge-up">+2.1%</span></td></tr>
-        <tr><td style="font-weight:700;color:var(--ink)">Mouse</td><td>Peripherals</td><td>₹2.8 Cr</td><td>₹1.5 Cr</td><td>53.6%</td><td>2.1%</td><td><span class="badge badge-up">+1.4%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Laptop</td><td>Electronics</td><td>₹53.90 Cr</td><td>₹20.44 Cr</td><td>37.93%</td><td>40.09%</td><td><span class="badge badge-dn">-6.86%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Smartphone</td><td>Electronics</td><td>₹32.82 Cr</td><td>₹13.78 Cr</td><td>41.98%</td><td>24.41%</td><td><span class="badge badge-up">+20.26%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Tablet</td><td>Electronics</td><td>₹19.99 Cr</td><td>₹8.03 Cr</td><td>40.17%</td><td>14.87%</td><td><span class="badge badge-up">+21.24%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Monitor</td><td>Peripherals</td><td>₹15.04 Cr</td><td>₹5.26 Cr</td><td>34.98%</td><td>11.19%</td><td><span class="badge badge-dn">-16.36%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Headphones</td><td>Audio</td><td>₹6.35 Cr</td><td>₹3.05 Cr</td><td>47.99%</td><td>4.72%</td><td><span class="badge badge-up">+3.91%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Webcam</td><td>Peripherals</td><td>₹2.79 Cr</td><td>₹1.20 Cr</td><td>42.97%</td><td>2.07%</td><td><span class="badge badge-up">+11.32%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Keyboard</td><td>Peripherals</td><td>₹2.29 Cr</td><td>₹1.03 Cr</td><td>44.92%</td><td>1.71%</td><td><span class="badge badge-up">+22.56%</span></td></tr>
+        <tr><td style="font-weight:700;color:var(--ink)">Mouse</td><td>Peripherals</td><td>₹1.26 Cr</td><td>₹0.63 Cr</td><td>49.87%</td><td>0.94%</td><td><span class="badge badge-dn">-4.15%</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -218,26 +232,26 @@
 <script>
 const DATA = {
   quarterly: {
-    all: { labels:['2022 Q1','Q2','Q3','Q4','2023 Q1','Q2','Q3','Q4'], rev:[14.2,16.8,14.1,18.9,15.7,17.4,15.2,22.1], prf:[5.6,6.7,5.5,7.6,6.2,6.9,5.9,8.9] },
-    '2022': { labels:['Q1','Q2','Q3','Q4'], rev:[14.2,16.8,14.1,18.9], prf:[5.6,6.7,5.5,7.6] },
-    '2023': { labels:['Q1','Q2','Q3','Q4'], rev:[15.7,17.4,15.2,22.1], prf:[6.2,6.9,5.9,8.9] }
+    all: { labels:['2022 Q1','Q2','Q3','Q4','2023 Q1','Q2','Q3','Q4'], rev:[14.03,17.87,15.36,18.87,13.74,15.71,18.96,19.88], prf:[5.58,7.10,6.07,7.42,5.51,6.31,7.51,7.91] },
+    '2022': { labels:['Q1','Q2','Q3','Q4'], rev:[14.03,17.87,15.36,18.87], prf:[5.58,7.10,6.07,7.42] },
+    '2023': { labels:['Q1','Q2','Q3','Q4'], rev:[13.74,15.71,18.96,19.88], prf:[5.51,6.31,7.51,7.91] }
   },
   region: {
-    all: { labels:['East','West','North','Central','South'], vals:[28.4,27.6,26.9,26.1,25.4] },
-    '2022': { labels:['East','West','North','Central','South'], vals:[13.6,13.1,12.8,12.4,12.0] },
-    '2023': { labels:['East','West','North','Central','South'], vals:[14.8,14.5,14.1,13.7,13.4] }
+    all: { labels:['North','East','West','South','Central'], vals:[28.83,28.25,27.47,26.12,23.76] },
+    '2022': { labels:['North','East','South','West','Central'], vals:[14.17,13.86,13.56,13.14,11.41] },
+    '2023': { labels:['North','East','West','South','Central'], vals:[14.66,14.39,14.33,12.56,12.35] }
   },
   monthly: {
     all: { labels:['Jan22','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan23','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec23'],
-      rev:[4.5,4.2,5.5,5.1,5.8,5.9,4.7,4.6,3.9,6.2,6.5,7.2,4.9,4.7,6.1,5.6,6.2,5.6,5.1,5.0,4.1,7.0,7.2,8.9],
-      prf:[1.8,1.6,2.2,2.0,2.3,2.4,1.8,1.8,1.5,2.5,2.6,2.9,1.9,1.8,2.4,2.2,2.4,2.2,2.0,1.9,1.6,2.8,2.9,3.6] },
-    '2022': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.5,4.2,5.5,5.1,5.8,5.9,4.7,4.6,3.9,6.2,6.5,7.2], prf:[1.8,1.6,2.2,2.0,2.3,2.4,1.8,1.8,1.5,2.5,2.6,2.9] },
-    '2023': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.9,4.7,6.1,5.6,6.2,5.6,5.1,5.0,4.1,7.0,7.2,8.9], prf:[1.9,1.8,2.4,2.2,2.4,2.2,2.0,1.9,1.6,2.8,2.9,3.6] }
+      rev:[4.44,4.91,4.68,5.56,6.44,5.87,5.49,4.86,5.02,6.39,6.69,5.79,4.53,4.37,4.85,5.63,5.63,4.45,6.49,6.49,5.97,6.79,5.78,7.31],
+      prf:[1.78,1.93,1.87,2.21,2.56,2.33,2.18,1.90,2.00,2.52,2.62,2.28,1.83,1.73,1.95,2.24,2.25,1.81,2.57,2.57,2.37,2.68,2.30,2.93] },
+    '2022': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.44,4.91,4.68,5.56,6.44,5.87,5.49,4.86,5.02,6.39,6.69,5.79], prf:[1.78,1.93,1.87,2.21,2.56,2.33,2.18,1.90,2.00,2.52,2.62,2.28] },
+    '2023': { labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], rev:[4.53,4.37,4.85,5.63,5.63,4.45,6.49,6.49,5.97,6.79,5.78,7.31], prf:[1.83,1.73,1.95,2.24,2.25,1.81,2.57,2.57,2.37,2.68,2.30,2.93] }
   },
   kpis: {
-    all: { rev:'₹134.4 Cr', prf:'₹53.4 Cr', margin:'39.7%', orders:'5,000', aov:'₹2.69L', delta:'↑ +12.3% YoY' },
-    '2022': { rev:'₹63.0 Cr', prf:'₹24.8 Cr', margin:'39.4%', orders:'2,420', aov:'₹2.60L', delta:'Baseline year' },
-    '2023': { rev:'₹71.4 Cr', prf:'₹28.6 Cr', margin:'40.1%', orders:'2,580', aov:'₹2.77L', delta:'↑ +13.3% vs 2022' }
+    all: { rev:'₹134.4 Cr', prf:'₹53.4 Cr', margin:'39.7%', orders:'5,000', aov:'₹2.69L', delta:'↑ +3.3% YoY' },
+    '2022': { rev:'₹66.1 Cr', prf:'₹26.2 Cr', margin:'39.6%', orders:'2,445', aov:'₹2.70L', delta:'Baseline year' },
+    '2023': { rev:'₹68.3 Cr', prf:'₹27.2 Cr', margin:'39.9%', orders:'2,555', aov:'₹2.67L', delta:'↑ +3.3% vs 2022' }
   }
 };
 
@@ -286,7 +300,7 @@ function initCharts(y='all') {
   if(catC) catC.destroy();
   catC = new Chart(document.getElementById('catChart'),{ type:'doughnut',
     data:{ labels:['Electronics','Peripherals','Audio'],
-      datasets:[{ data:[y==='all'?66.8:65, y==='all'?29.6:30.8, y==='all'?3.6:4.2],
+      datasets:[{ data:y==='all'?[79.37,15.90,4.72]:y==='2022'?[78.38,16.91,4.71]:[80.33,14.93,4.74],
         backgroundColor:['#1a56db','#0e9f6e','#e3a008'], borderWidth:0, hoverOffset:4 }] },
     options:{ responsive:true, maintainAspectRatio:false, cutout:'60%',
       plugins:{ legend:{ display:true, position:'bottom', labels:{ font:{size:11}, color:'#7a8194', boxWidth:10, padding:12 } } } }

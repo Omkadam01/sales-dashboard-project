@@ -5,17 +5,21 @@ Full EDA with charts saved to reports/
 """
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import seaborn as sns
 import os
+import sys
 import warnings
 warnings.filterwarnings('ignore')
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # ── Config ────────────────────────────────────────────────────────────────────
-DATA_PATH    = os.path.join(os.path.dirname(__file__), '..', 'data', 'sales_data.csv')
-REPORTS_PATH = os.path.join(os.path.dirname(__file__), '..', 'reports')
+BASE_DIR     = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH    = os.path.join(BASE_DIR, 'sales_data.csv')
+REPORTS_PATH = os.path.join(BASE_DIR, 'reports')
 os.makedirs(REPORTS_PATH, exist_ok=True)
 
 PALETTE = ['#1a56db', '#0e9f6e', '#e3a008', '#e02424', '#7c3aed']
